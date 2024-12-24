@@ -1,13 +1,25 @@
+import { useStore } from "@/src/store"
 import { OrderItem } from "@/src/types"
 import { formatCurrency } from "@/src/util"
 import {XCircleIcon, PlusIcon, MinusIcon} from '@heroicons/react/24/outline'
+import { useMemo } from "react"
 
 type ProductsDetailProps = {
     product: OrderItem
 }
+const MIN_ITEMS = 1
+const MAX_ITEMS = 5
 
 
 export default function ProductsDetail({product}:ProductsDetailProps) {
+    const increaseQuantity = useStore((state) => state.increaseQuantity);
+    const decreaseQuantity = useStore((state) => state.decreaseQuantity);
+    const removeProduct = useStore((state) => state.removeProduct);
+    const disableDecreaseButton = useMemo(() => product.quantity === MIN_ITEMS,[product]);
+    const disableIncreaseButton = useMemo(() => product.quantity === MAX_ITEMS,[product]);
+
+
+
   return (
     <div>
       <div className="shadow space-y-1 p-4 bg-white  border-t border-gray-200 ">
@@ -17,6 +29,7 @@ export default function ProductsDetail({product}:ProductsDetailProps) {
 
                     <button
                         type="button"
+                        onClick={() => removeProduct(product.id)}
                         
                     >
                         <XCircleIcon className="text-red-600 h-8 w-8" />
@@ -30,6 +43,8 @@ export default function ProductsDetail({product}:ProductsDetailProps) {
                         type="button"
                         
                         className='disabled:opacity-20'
+                        onClick={() => decreaseQuantity(product.id)}
+                        disabled={disableDecreaseButton}
                     >
                         <MinusIcon className="h-6 w-6" />
                     </button>
@@ -42,6 +57,8 @@ export default function ProductsDetail({product}:ProductsDetailProps) {
                         type='button'
                         
                         className="disabled:opacity-10"
+                        onClick={() => increaseQuantity(product.id)}
+                        disabled={disableIncreaseButton}
                         
                     >
                         <PlusIcon className="h-6 w-6" />

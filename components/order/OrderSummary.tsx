@@ -2,9 +2,12 @@
 
 import { useStore } from "@/src/store";
 import ProductsDetail from "./ProductsDetail";
+import { useMemo } from "react";
+import { formatCurrency } from "@/src/util";
 
 export default function OrderSummary() {
   const order = useStore((state) => state.order);
+  const total = useMemo(() => order.reduce((total, product) => total + (product.quantity * product.price), 0), [order]);
 
   return (
     <aside className="lg:h-screen lg:overflow-y-scroll md:w64 lg:w-96 p-5">
@@ -20,8 +23,12 @@ export default function OrderSummary() {
               product={product} 
             />
           ))}
+          <p className="text-2xl mt-20 text-center">
+            Total a pagar: {''}
+            <span className="font-bold">{formatCurrency(total)}</span>
+          </p>
         </div>
       )}
     </aside>
   );
-}  // <- Aquí parece que el problema está con la llave de cierre
+}
