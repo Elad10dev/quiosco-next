@@ -18,7 +18,7 @@ export const useStore = create<Store>((set, get) => ({
 
         if (get().order.find((item) => item.id === product.id)) {
             order = get().order.map((item) => {
-                if (item.id === product.id) {
+                if (item.id === product.id && item.quantity < 5) {
                     return {
                         ...item,
                         quantity: item.quantity + 1,
@@ -45,7 +45,7 @@ export const useStore = create<Store>((set, get) => ({
     increaseQuantity: (id) => {
         set(state => ({
             order: state.order.map((product) => {
-                if (product.id === id) {
+                if (product.id === id && product.quantity < 5) {
                     return {
                         ...product,
                         quantity: product.quantity + 1,
@@ -58,14 +58,17 @@ export const useStore = create<Store>((set, get) => ({
     },
     
     decreaseQuantity: (id) => { 
-        const order = get().order.map(item => item.id === id ? { 
-            ...item, 
-            quantity: item.quantity - 1, 
-            subtotal: (item.quantity - 1) * item.price
-        } : item);
-
-        set(() => ({ 
-            order 
+        set(state => ({
+            order: state.order.map((product) => {
+                if (product.id === id && product.quantity > 1) {
+                    return {
+                        ...product,
+                        quantity: product.quantity - 1,
+                        subtotal: (product.quantity - 1) * product.price,
+                    };
+                }
+                return product; // Necesario para retornar el item modificado y los no modificados
+            })
         }));
     },
     removeProduct: (id) => {
