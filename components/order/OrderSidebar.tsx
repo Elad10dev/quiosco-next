@@ -1,5 +1,6 @@
 import { prisma } from "@/src/lib/prisma"
 import CatergoryIcon from "../ui/CatrgoryIcon"
+import Logo from "../ui/Logo"
 
 
 
@@ -13,6 +14,7 @@ export default async function OrderSidebar() {
   console.log(categories)
   return (
     <aside className="md:w-72 md:h-screen bg-white">
+      <Logo />
       <nav className="mt-10">
         {categories.map(category => (
           <CatergoryIcon
