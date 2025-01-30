@@ -1,0 +1,25 @@
+import { prisma } from "@/src/lib/prisma"
+
+export async function GET() {
+    const orders = await prisma.order.findMany({
+        take: 10,
+        where: {
+            orderReadyAt:{
+                not: null
+            }
+        },
+        orderBy: {
+            orderReadyAt: 'desc'
+        },
+        include: {
+            orderItems: {
+                include: {
+                    product: true
+                }
+            }
+        }
+        
+    })
+
+    return Response.json(orders)
+}
