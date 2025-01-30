@@ -3,8 +3,9 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useState } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
+import { getImagenPath } from "@/src/util";
 
-export default function ImageUpload() {
+export default function ImageUpload({image}:{image?:string}) {
   const uploadPreset = "quioscoimg"; // Reemplaza esto con tu upload preset
   const [imageUrl, setImageUrl] = useState("");
 
@@ -42,7 +43,20 @@ export default function ImageUpload() {
               )}
             </div>
           </div>
-          <input type="hidden" name="image" value={imageUrl} />
+          {image && !imageUrl && (
+            <div className="space-y-2" >
+              <label className="text-slate-800">Imagen Actual</label>
+              <div
+                className="relative w-64 h-64"
+              ><Image
+                  fill
+                  src={getImagenPath(image)} 
+                  alt={"Imagen del Producto"}              
+                />
+              </div>
+            </div>
+          )}
+          <input type="hidden" name="image" defaultValue={imageUrl ? imageUrl : image} />
         </>
       )}
     </CldUploadWidget>
