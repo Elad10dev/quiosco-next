@@ -14,7 +14,7 @@ export default function ImageUpload({image}:{image?:string}) {
     onSuccess={(result, { widget }) => {
         if(result.event === "success") {
             widget.close();
-            //@ts-ignore
+            //@ts-expect-error error por solucion
             setImageUrl(result.info?.secure_url);
         }
     }}
